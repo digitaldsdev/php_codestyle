@@ -49,8 +49,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ScriptEvents::POST_INSTALL_CMD => 'configureProject',
-            ScriptEvents::POST_UPDATE_CMD => 'configureProject',
+            ScriptEvents::POST_INSTALL_CMD => 'postInstallCmd',
+            ScriptEvents::POST_UPDATE_CMD => 'postUpdateCmd',
         ];
     }
 
@@ -61,6 +61,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         if (is_file('phpstan.neon')) {
             copy(realpath(__DIR__ . '/../phpstan.neon'), 'phpstan.neon');
         }
+    }
+
+    public function postUpdateCmd(): void
+    {
+        $this->configureProject();
     }
 
     private function configureProject(): void
