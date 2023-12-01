@@ -50,6 +50,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::POST_UPDATE_CMD);
         $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::CODE_STYLE_FIX);
         $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::CODE_STYLE_CHECK);
+        $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::CODE_STYLE_ANALYZE);
 
         $this->composerHelper->getManipulator()->removeSubNode('extra', 'hooks');
 
@@ -75,6 +76,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function postUpdateCmd(): void
     {
         $this->configureProject();
+        $this->copyPhpstan();
     }
 
     private function configureProject(): void
@@ -91,9 +93,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $vendorPath = $this->composer->getConfig()->get('vendor-dir');
         $phpstan = realpath($vendorPath . '/digital-sector/codestyle/phpstan.neon');
+        $newPhpstan = $vendorPath . '/../phpstan.neon';
 
-        $this->io->write('[digital-sector/codestyle]: Copy phpstan.neon to root directory');
-
-        $this->filesystem->copy($phpstan, $vendorPath . '/../phpstan.neon');
+        if (!$this->filesystem->exists(realpath($newPhpstan))) {
+            $this->io->write('[digital-sector/codestyle]: Copy phpstan.neon to project directory');
+            $this->filesystem->copy($phpstan, $newPhpstan);
+        }
     }
 }

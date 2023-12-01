@@ -4,6 +4,8 @@ parameters:
         - %rootDir%/../../../tests
         - %rootDir%/../../../bitrix
         - %rootDir%/../../../var
+        - %rootDir%/../../../config
+        - %rootDir%/../../../docker
         - %rootDir%/../../../vendor
         - %rootDir%/../../../*.dist
     checkGenericClassInNonGenericObjectType: false

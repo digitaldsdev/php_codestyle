@@ -22,6 +22,6 @@ final class ComposerTemplates
         Commands::POST_UPDATE_CMD => ['cghooks update'],
         Commands::CODE_STYLE_FIX => 'vendor/bin/php-cs-fixer fix --path-mode=intersection --config vendor/digital-sector/codestyle/.php_cs-fixer.php --allow-risky=yes',
         Commands::CODE_STYLE_CHECK => 'vendor/bin/php-cs-fixer fix --path-mode=intersection --config vendor/digital-sector/codestyle/.php_cs-fixer.php --dry-run --allow-risky=yes',
-        Commands::CODE_ANALYZE => 'vendor/bin/phpstan analyse -c phpstan.neon --ansi',
+        Commands::CODE_STYLE_ANALYZE => 'vendor/bin/phpstan analyse -c phpstan.neon --ansi',
     ];
 }
