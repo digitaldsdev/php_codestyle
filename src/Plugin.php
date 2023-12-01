@@ -67,34 +67,14 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function postInstallCmd(): void
     {
         $this->configureProject();
-        $vendorPath = $this->composer->getConfig()->get('vendor-dir');
-
-        $stan = realpath($vendorPath . '/digital-sector/codestyle/phpstan.neon');
-
-
-        var_dump($vendorPath, $stan, is_file($stan));
-
-        die();
-
-        $this->io->info(sprintf('$path: %s, $stan: %s', $path, $stan));
+        $this->copyPhpstan();
     }
 
     public function postUpdateCmd(): void
     {
         $this->configureProject();
-
-        $vendorPath = $this->composer->getConfig()->get('vendor-dir');
-        $stan = realpath($vendorPath . '/digital-sector/codestyle/phpstan.neon');
-
-
-        var_dump($vendorPath, $stan, is_file($stan));
-
-        die();
-
-        $this->io->write(sprintf('$path: %s, $stan: %s', $path, $stan));
+        $this->copyPhpstan();
     }
-
-
 
     private function configureProject(): void
     {
@@ -104,5 +84,16 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $this->composerHelper->writeComposerJson();
 
         $this->composerHelper->updateComposerLock();
+    }
+
+    private function copyPhpstan(): void
+    {
+        $vendorPath = $this->composer->getConfig()->get('vendor-dir');
+        $phpstan = realpath($vendorPath . '/digital-sector/codestyle/phpstan.neon');
+        $newPhpstan = realpath($vendorPath . '/../phpstan.neon');
+
+        $this->io->write('[digital-sector/codestyle]: Copy phpstan.neon to root directory');
+
+        $this->filesystem->copy($phpstan, $newPhpstan);
     }
 }
