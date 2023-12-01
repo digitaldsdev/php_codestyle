@@ -46,6 +46,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $this->manipulator->removeSubNode('extra', 'hooks');
         $this->manipulator->removeSubNode('scripts', Commands::CODE_STYLE_FIX);
         $this->manipulator->removeSubNode('scripts', Commands::CODE_STYLE_CHECK);
+        $this->manipulator->removeSubNode('scripts', Commands::POST_INSTALL_CMD);
+        $this->manipulator->removeSubNode('scripts', Commands::POST_UPDATE_CMD);
 
         $this->writeComposerJson();
     }
