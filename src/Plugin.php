@@ -58,7 +58,9 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $this->configureProject();
 
-        copy(realpath(__DIR__ . '/../phpstan.neon'), realpath(__DIR__ . '/../../../phpstan.neon'));
+        $result = @copy(realpath(__DIR__ . '/../phpstan.neon'), realpath(__DIR__ . '/../../../../phpstan.neon'));
+
+        var_dump($result);
     }
 
     public function postUpdateCmd(): void
