@@ -15,6 +15,7 @@ use Composer\Plugin\PluginInterface;
 use Composer\Script\ScriptEvents;
 use DigitalSector\CodeStyle\Enum\Commands;
 use DigitalSector\CodeStyle\Enum\ComposerTemplates;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
@@ -24,12 +25,15 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     private IOInterface $io;
 
+    private Filesystem $filesystem;
+
     public function activate(Composer $composer, IOInterface $io)
     {
         $composerFile = Factory::getComposerFile();
         $this->manipulator = new JsonManipulator(file_get_contents($composerFile));
         $this->composer = $composer;
         $this->io = $io;
+        $this->filesystem = new Filesystem();
     }
 
     public function deactivate(Composer $composer, IOInterface $io)
@@ -58,9 +62,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $this->configureProject();
 
-        $result = @copy(realpath(__DIR__ . '/../phpstan.neon'), realpath(__DIR__ . '/../../../../phpstan.neon'));
 
-        var_dump($result);
+        $path = $this->composer->getConfig()->get('vendor-dir');
+        $stan = realpath($this->composer->getConfig()->get('vendor-dir') . '/phpstan.neon');
+
+        $this->io->info(sprintf('$path: %s, $stan: %s', $path, $stan));
     }
 
     public function postUpdateCmd(): void
