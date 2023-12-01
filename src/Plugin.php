@@ -44,6 +44,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function uninstall(Composer $composer, IOInterface $io)
     {
+        $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::CODE_STYLE_PHPLINT);
         $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::CODE_STYLE_FIX);
         $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::CODE_STYLE_CHECK);
         $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::CODE_STYLE_ANALYZE);
