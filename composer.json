@@ -1,0 +1,25 @@
+{
+    "name": "digital-sector/codestyle",
+    "description": "Codestyle for projects",
+    "license": ["proprietary"],
+    "type": "composer-plugin",
+    "require": {
+        "php": ">=8.1",
+        "symfony/console": "^5.4",
+        "composer-plugin-api": "*"
+    },
+    "require-dev": {
+        "brainmaestro/composer-git-hooks": "^2.8",
+        "phpstan/phpstan": "^1.10",
+        "friendsofphp/php-cs-fixer": "^3.40",
+        "composer/composer": "^2.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "DigitalSector\\CodeStyle\\": "src"
+        }
+    },
+    "extra": {
+        "class": "DigitalSector\\CodeStyle\\Plugin"
+    }
+}
