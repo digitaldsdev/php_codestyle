@@ -61,8 +61,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function configureProject()
     {
-        $this->manipulator->addMainKey('extra',
-            [
+        $this->manipulator->addMainKey('extra', [
                 'hooks' => [
                     'config' => [
                         'stop-on-failure' => ["pre-push"],
@@ -71,6 +70,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
                 ],
             ]
         );
+        $this->manipulator->addMainKey('scripts', ['code-style:fix' => 'vendor/bin/php-cs-fixer fix --path-mode=intersection --config vendor/digital-sector/code-style/.php_cs-fixer.php --allow-risky=yes']);
 
         $this->writeComposerJson();
 
