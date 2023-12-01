@@ -90,15 +90,9 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $vendorPath = $this->composer->getConfig()->get('vendor-dir');
         $phpstan = realpath($vendorPath . '/digital-sector/codestyle/phpstan.neon');
-        $newPhpstan = realpath($vendorPath . '/../phpstan.neon');
-
-
-        var_dump($phpstan, $newPhpstan);
-
-        die();
 
         $this->io->write('[digital-sector/codestyle]: Copy phpstan.neon to root directory');
 
-        $this->filesystem->copy($phpstan, $newPhpstan);
+        $this->filesystem->copy($phpstan, $vendorPath . '/../phpstan.neon');
     }
 }
