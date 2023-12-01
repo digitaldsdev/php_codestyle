@@ -53,6 +53,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
         $this->composerHelper->getManipulator()->removeSubNode('extra', 'hooks');
 
+        $this->filesystem->remove('./phpstan.neon');
+
         $this->composerHelper->writeComposerJson();
     }
 
@@ -73,7 +75,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function postUpdateCmd(): void
     {
         $this->configureProject();
-        $this->copyPhpstan();
     }
 
     private function configureProject(): void
