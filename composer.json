@@ -6,7 +6,7 @@
     "require": {
         "php": ">=8.1",
         "symfony/console": "^5.4",
-        "composer-plugin-api": "^2.6",
+        "composer-plugin-api": "*",
         "brainmaestro/composer-git-hooks": "^2.8",
         "phpstan/phpstan": "^1.10",
         "friendsofphp/php-cs-fixer": "^3.40"
