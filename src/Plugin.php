@@ -43,11 +43,12 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function uninstall(Composer $composer, IOInterface $io)
     {
-        $this->manipulator->removeSubNode('extra', 'hooks');
-        $this->manipulator->removeSubNode('scripts', Commands::CODE_STYLE_FIX);
-        $this->manipulator->removeSubNode('scripts', Commands::CODE_STYLE_CHECK);
         $this->manipulator->removeSubNode('scripts', Commands::POST_INSTALL_CMD);
         $this->manipulator->removeSubNode('scripts', Commands::POST_UPDATE_CMD);
+        $this->manipulator->removeSubNode('scripts', Commands::CODE_STYLE_FIX);
+        $this->manipulator->removeSubNode('scripts', Commands::CODE_STYLE_CHECK);
+
+        $this->manipulator->removeSubNode('extra', 'hooks');
 
         $this->writeComposerJson();
     }
@@ -74,6 +75,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function postUpdateCmd(): void
     {
         $this->configureProject();
+
+        $path = $this->composer->getConfig()->get('vendor-dir');
+        $stan = realpath($this->composer->getConfig()->get('vendor-dir') . '/phpstan.neon');
+
+        $this->io->info(sprintf('$path: %s, $stan: %s', $path, $stan));
     }
 
     private function configureProject(): void
