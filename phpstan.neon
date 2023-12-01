@@ -8,4 +8,5 @@ parameters:
         - %rootDir%/../../../docker
         - %rootDir%/../../../vendor
         - %rootDir%/../../../*.dist
+        - %rootDir%/../../../*.cache
     checkGenericClassInNonGenericObjectType: false

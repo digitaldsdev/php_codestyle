@@ -7,9 +7,11 @@ class CsFixerConfigurator
 {
     private const RULES = [
         '@PER-CS' => true,
+        '@PHP81Migration' => true,
         '@PHP82Migration' => true,
         '@PSR12' => true,
         'array_syntax' => ['syntax' => 'short'],
+        'no_unused_imports' => true,
         'strict_comparison' => false,
     ];
 
