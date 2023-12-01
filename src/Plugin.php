@@ -55,12 +55,22 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         return [
             ScriptEvents::POST_INSTALL_CMD => 'configureProject',
+            ScriptEvents::POST_UPDATE_CMD => 'configureProject',
         ];
     }
 
     public function configureProject()
     {
-        $this->manipulator->addMainKey('extra', ['hooks' => ['pre-commit' => ['echo codestyle check']]]);
+        $this->manipulator->addMainKey('extra',
+            [
+                'hooks' => [
+                    'config' => [
+                        'stop-on-failure' => ["pre-push"],
+                    ],
+                    'pre-commit' => ['echo codestyle check'],
+                ],
+            ]
+        );
 
         $this->writeComposerJson();
 
