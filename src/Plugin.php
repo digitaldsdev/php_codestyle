@@ -65,9 +65,12 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $this->configureProject();
 
-
         $path = $this->composer->getConfig()->get('vendor-dir');
         $stan = realpath($this->composer->getConfig()->get('vendor-dir') . '/phpstan.neon');
+
+        var_dump($path, $stan);
+
+        die();
 
         $this->io->info(sprintf('$path: %s, $stan: %s', $path, $stan));
     }
@@ -78,6 +81,10 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
         $path = $this->composer->getConfig()->get('vendor-dir');
         $stan = realpath($this->composer->getConfig()->get('vendor-dir') . '/phpstan.neon');
+
+        var_dump($path, $stan);
+
+        die();
 
         $this->io->info(sprintf('$path: %s, $stan: %s', $path, $stan));
     }
