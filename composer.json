@@ -19,7 +19,7 @@
         "code-style:phplint": "php -l -f",
         "code-style:fix": "vendor/bin/php-cs-fixer fix --path-mode=intersection --config .php_cs-fixer.php --allow-risky=yes",
         "code-style:check": "vendor/bin/php-cs-fixer fix --path-mode=intersection --config .php_cs-fixer.php --allow-risky=yes",
-        "code-analyze:local": "vendor/bin/phpstan analyse -c phpstan.neon --ansi"
+        "code-style:analyze": "vendor/bin/phpstan analyse -c phpstan.neon --ansi"
     },
     "autoload": {
         "psr-4": {
