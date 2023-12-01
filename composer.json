@@ -14,6 +14,11 @@
     "require-dev": {
         "composer/composer": "^2.6"
     },
+    "scripts": {
+        "code-style:fix": "vendor/bin/php-cs-fixer fix --path-mode=intersection --config .php_cs-fixer.php --allow-risky=yes",
+        "code-style:check": "vendor/bin/php-cs-fixer fix --path-mode=intersection --config .php_cs-fixer.php --allow-risky=yes",
+        "code-analyze:local": "vendor/bin/phpstan analyse -c phpstan.neon --ansi"
+    },
     "autoload": {
         "psr-4": {
             "DigitalSector\\CodeStyle\\": "src"

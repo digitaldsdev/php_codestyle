@@ -1,0 +1,9 @@
+parameters:
+    level: 6
+    excludePaths:
+        - %rootDir%/../../../tests
+        - %rootDir%/../../../bitrix
+        - %rootDir%/../../../var
+        - %rootDir%/../../../vendor
+        - %rootDir%/../../../*.dist
+    checkGenericClassInNonGenericObjectType: false

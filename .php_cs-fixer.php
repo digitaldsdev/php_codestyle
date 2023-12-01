@@ -3,10 +3,6 @@
 use PhpCsFixer\ConfigInterface;
 use PhpCsFixer\Finder;
 
-$finder = (new PhpCsFixer\Finder())
-    ->in(__DIR__)
-;
-
 class CsFixerConfigurator
 {
     private const RULES = [

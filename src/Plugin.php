@@ -54,26 +54,35 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         ];
     }
 
-    public function configureProject()
+    public function postInstallCmd(): void
+    {
+        $this->configureProject();
+
+        if (is_file('phpstan.neon')) {
+            copy(realpath(__DIR__ . '/../phpstan.neon'), 'phpstan.neon');
+        }
+    }
+
+    private function configureProject(): void
     {
         $this->manipulator->addMainKey('extra', ComposerTemplates::EXTRA_MAIN);
-        $this->manipulator->addMainKey('scripts', ComposerTemplates::SCRIPTS);;
+        $this->manipulator->addMainKey('scripts', ComposerTemplates::SCRIPTS);
 
         $this->writeComposerJson();
 
         $this->updateComposerLock();
     }
 
-    private function writeComposerJson()
+    private function writeComposerJson(): void
     {
         file_put_contents(Factory::getComposerFile(), $this->manipulator->getContents());
     }
 
-    private function updateComposerLock()
+    private function updateComposerLock(): void
     {
-        $lock = substr(Factory::getComposerFile(), 0, -4).'lock';
+        $composerFile = Factory::getComposerFile();
         $composerJson = file_get_contents(Factory::getComposerFile());
-        $lockFile = new JsonFile($lock, null, $this->io);
+        $lockFile = new JsonFile(Factory::getLockFile($composerFile), null, $this->io);
         $locker = new Locker($this->io, $lockFile, $this->composer->getInstallationManager(), $composerJson);
         $lockData = $locker->getLockData();
         $lockData['content-hash'] = Locker::getContentHash($composerJson);
