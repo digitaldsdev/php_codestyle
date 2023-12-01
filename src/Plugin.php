@@ -19,21 +19,24 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
-    private JsonManipulator $manipulator;
-
     private Composer $composer;
 
     private IOInterface $io;
 
     private Filesystem $filesystem;
 
+    private ComposerHelper $composerHelper;
+
     public function activate(Composer $composer, IOInterface $io)
     {
-        $composerFile = Factory::getComposerFile();
-        $this->manipulator = new JsonManipulator(file_get_contents($composerFile));
         $this->composer = $composer;
         $this->io = $io;
         $this->filesystem = new Filesystem();
+        $this->composerHelper = new ComposerHelper(
+            $composer,
+            $io,
+            new JsonManipulator(file_get_contents(Factory::getComposerFile()))
+        );
     }
 
     public function deactivate(Composer $composer, IOInterface $io)
@@ -43,14 +46,14 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function uninstall(Composer $composer, IOInterface $io)
     {
-        $this->manipulator->removeSubNode('scripts', Commands::POST_INSTALL_CMD);
-        $this->manipulator->removeSubNode('scripts', Commands::POST_UPDATE_CMD);
-        $this->manipulator->removeSubNode('scripts', Commands::CODE_STYLE_FIX);
-        $this->manipulator->removeSubNode('scripts', Commands::CODE_STYLE_CHECK);
+        $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::POST_INSTALL_CMD);
+        $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::POST_UPDATE_CMD);
+        $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::CODE_STYLE_FIX);
+        $this->composerHelper->getManipulator()->removeSubNode('scripts', Commands::CODE_STYLE_CHECK);
 
-        $this->manipulator->removeSubNode('extra', 'hooks');
+        $this->composerHelper->getManipulator()->removeSubNode('extra', 'hooks');
 
-        $this->writeComposerJson();
+        $this->composerHelper->writeComposerJson();
     }
 
     public static function getSubscribedEvents(): array
@@ -64,11 +67,12 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function postInstallCmd(): void
     {
         $this->configureProject();
+        $vendorPath = $this->composer->getConfig()->get('vendor-dir');
 
-        $path = $this->composer->getConfig()->get('vendor-dir');
-        $stan = realpath($this->composer->getConfig()->get('vendor-dir') . '/phpstan.neon');
+        $stan = realpath($vendorPath . '/digital-sector/codestyle/phpstan.neon');
 
-        var_dump($path, $stan);
+
+        var_dump($vendorPath, $stan, is_file($stan));
 
         die();
 
@@ -79,39 +83,26 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $this->configureProject();
 
-        $path = $this->composer->getConfig()->get('vendor-dir');
-        $stan = realpath($this->composer->getConfig()->get('vendor-dir') . '/phpstan.neon');
+        $vendorPath = $this->composer->getConfig()->get('vendor-dir');
+        $stan = realpath($vendorPath . '/digital-sector/codestyle/phpstan.neon');
 
-        var_dump($path, $stan);
+
+        var_dump($vendorPath, $stan, is_file($stan));
 
         die();
 
-        $this->io->info(sprintf('$path: %s, $stan: %s', $path, $stan));
+        $this->io->write(sprintf('$path: %s, $stan: %s', $path, $stan));
     }
+
+
 
     private function configureProject(): void
     {
-        $this->manipulator->addMainKey('extra', ComposerTemplates::EXTRA_MAIN);
-        $this->manipulator->addMainKey('scripts', ComposerTemplates::SCRIPTS);
+        $this->composerHelper->getManipulator()->addMainKey('extra', ComposerTemplates::EXTRA_MAIN);
+        $this->composerHelper->getManipulator()->addMainKey('scripts', ComposerTemplates::SCRIPTS);
 
-        $this->writeComposerJson();
+        $this->composerHelper->writeComposerJson();
 
-        $this->updateComposerLock();
-    }
-
-    private function writeComposerJson(): void
-    {
-        file_put_contents(Factory::getComposerFile(), $this->manipulator->getContents());
-    }
-
-    private function updateComposerLock(): void
-    {
-        $composerFile = Factory::getComposerFile();
-        $composerJson = file_get_contents(Factory::getComposerFile());
-        $lockFile = new JsonFile(Factory::getLockFile($composerFile), null, $this->io);
-        $locker = new Locker($this->io, $lockFile, $this->composer->getInstallationManager(), $composerJson);
-        $lockData = $locker->getLockData();
-        $lockData['content-hash'] = Locker::getContentHash($composerJson);
-        $lockFile->write($lockData);
+        $this->composerHelper->updateComposerLock();
     }
 }
