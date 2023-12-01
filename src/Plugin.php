@@ -46,24 +46,30 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function uninstall(Composer $composer, IOInterface $io)
     {
-        // TODO: Implement uninstall() method.
+        $this->manipulator->removeSubNode('extra', 'hooks');
+
+        $this->writeComposerJson();
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
             ScriptEvents::POST_INSTALL_CMD => 'configureProject',
-            ScriptEvents::POST_UPDATE_CMD => 'configureProject',
         ];
     }
 
-    public function configureProject(): void
+    public function configureProject()
     {
-        $this->manipulator->addMainKey('extra', ['hooks' => ['pre-commit' => 'echo test']]);
+        $this->manipulator->addMainKey('extra', ['hooks' => ['pre-commit' => ['echo codestyle check']]]);
 
-        file_put_contents(Factory::getComposerFile(), $this->manipulator->getContents());
+        $this->writeComposerJson();
 
         $this->updateComposerLock();
+    }
+
+    private function writeComposerJson()
+    {
+        file_put_contents(Factory::getComposerFile(), $this->manipulator->getContents());
     }
 
     private function updateComposerLock()
