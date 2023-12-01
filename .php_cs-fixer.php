@@ -25,8 +25,8 @@ class CsFixerConfigurator
         'docker',
     ];
 
-    private const ANALYZE_PATH = '/../../../';
-    private const COMPOSER_JSON_PATH = '/../../../composer.json';
+    private const ANALYZE_PATH = './';
+    private const COMPOSER_JSON_PATH = './composer.json';
 
     /**
      * @var string[]
@@ -62,8 +62,8 @@ class CsFixerConfigurator
             $extraConfig = $composer['extra']['code-style'] ?? [];
             $this->excludes = $extraConfig['finder']['excludes'] ?? [];
 
-            if (isset($composer['extra']['analyze-path'])) {
-                $this->analyzePath = $composer['extra']['analyze-path'];
+            if (isset($extraConfig['analyze-path'])) {
+                $this->analyzePath = $extraConfig['analyze-path'];
             }
         }
 

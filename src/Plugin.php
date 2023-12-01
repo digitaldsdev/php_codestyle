@@ -13,23 +13,16 @@ use Composer\Json\JsonManipulator;
 use Composer\Package\Locker;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\ScriptEvents;
+use DigitalSector\CodeStyle\Enum\Commands;
+use DigitalSector\CodeStyle\Enum\ComposerTemplates;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
-    /**
-     * @var JsonManipulator
-     */
-    private $manipulator;
+    private JsonManipulator $manipulator;
 
-    /**
-     * @var Composer
-     */
-    private $composer;
+    private Composer $composer;
 
-    /**
-     * @var IOInterface
-     */
-    private $io;
+    private IOInterface $io;
 
     public function activate(Composer $composer, IOInterface $io)
     {
@@ -47,6 +40,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function uninstall(Composer $composer, IOInterface $io)
     {
         $this->manipulator->removeSubNode('extra', 'hooks');
+        $this->manipulator->removeSubNode('scripts', Commands::CODE_STYLE_FIX);
+        $this->manipulator->removeSubNode('scripts', Commands::CODE_STYLE_CHECK);
 
         $this->writeComposerJson();
     }
@@ -61,16 +56,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function configureProject()
     {
-        $this->manipulator->addMainKey('extra', [
-                'hooks' => [
-                    'config' => [
-                        'stop-on-failure' => ["pre-push"],
-                    ],
-                    'pre-commit' => ['echo codestyle check'],
-                ],
-            ]
-        );
-        $this->manipulator->addMainKey('scripts', ['code-style:fix' => 'vendor/bin/php-cs-fixer fix --path-mode=intersection --config vendor/digital-sector/code-style/.php_cs-fixer.php --allow-risky=yes']);
+        $this->manipulator->addMainKey('extra', ComposerTemplates::EXTRA_MAIN);
+        $this->manipulator->addMainKey('scripts', ComposerTemplates::SCRIPTS);;
 
         $this->writeComposerJson();
 
