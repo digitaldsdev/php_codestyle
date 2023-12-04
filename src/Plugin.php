@@ -78,8 +78,21 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     private function configureProject(): void
     {
-        $this->composerHelper->getManipulator()->addMainKey('extra', ComposerTemplates::EXTRA_MAIN);
-        $this->composerHelper->getManipulator()->addMainKey('scripts', ComposerTemplates::SCRIPTS);
+        $existsExtra = $this->composerHelper->getKey('extra');
+        $existsScripts = $this->composerHelper->getKey('scripts');
+
+        $this->composerHelper
+            ->getManipulator()
+            ->addMainKey(
+                'extra',
+                array_merge_recursive($existsExtra, ComposerTemplates::EXTRA_MAIN)
+            );
+        $this->composerHelper
+            ->getManipulator()
+            ->addMainKey(
+                'scripts',
+                array_merge_recursive($existsScripts, ComposerTemplates::SCRIPTS)
+            );
 
         $this->composerHelper->writeComposerJson();
 

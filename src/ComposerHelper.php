@@ -10,6 +10,7 @@ use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Json\JsonManipulator;
 use Composer\Package\Locker;
+use Seld\JsonLint\ParsingException;
 
 class ComposerHelper
 {
@@ -31,6 +32,20 @@ class ComposerHelper
         return $this->manipulator;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     *
+     * @throws ParsingException
+     */
+    public function getKey(string $key)
+    {
+        $json = JsonFile::parseJson($this->getComposerJsonContent());
+
+        return $json[$key];
+    }
+
     public function writeComposerJson(): void
     {
         file_put_contents(Factory::getComposerFile(), $this->manipulator->getContents());
@@ -39,11 +54,16 @@ class ComposerHelper
     public function updateComposerLock(): void
     {
         $composerFile = Factory::getComposerFile();
-        $composerJson = file_get_contents(Factory::getComposerFile());
+        $composerJson = $this->getComposerJsonContent();
         $lockFile = new JsonFile(Factory::getLockFile($composerFile), null, $this->io);
         $locker = new Locker($this->io, $lockFile, $this->composer->getInstallationManager(), $composerJson);
         $lockData = $locker->getLockData();
         $lockData['content-hash'] = Locker::getContentHash($composerJson);
         $lockFile->write($lockData);
+    }
+
+    private function getComposerJsonContent(): string
+    {
+        return file_get_contents(Factory::getComposerFile());
     }
 }
