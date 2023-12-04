@@ -17,9 +17,9 @@
     },
     "scripts": {
         "code-style:phplint": "php -l -f",
-        "code-style:fix": "vendor/bin/php-cs-fixer fix --path-mode=intersection --config .php_cs-fixer.php --allow-risky=yes",
-        "code-style:check": "vendor/bin/php-cs-fixer fix --path-mode=intersection --config .php_cs-fixer.php --allow-risky=yes",
-        "code-style:analyze": "vendor/bin/phpstan analyse -c phpstan.neon --ansi"
+        "code-style:fix": "php -d memory_limit=512M vendor/bin/php-cs-fixer fix --path-mode=intersection --config .php_cs-fixer.php --allow-risky=yes",
+        "code-style:check": "php -d memory_limit=512M vendor/bin/php-cs-fixer fix --path-mode=intersection --config .php_cs-fixer.php --allow-risky=yes",
+        "code-style:analyze": "php -d memory_limit=512M vendor/bin/phpstan analyse -c phpstan.neon --ansi"
     },
     "autoload": {
         "psr-4": {

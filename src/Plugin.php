@@ -68,19 +68,24 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $this->configureProject();
         $this->copyPhpstan();
+        $this->copyGitHooks();
     }
 
     public function postUpdateCmd(): void
     {
         $this->configureProject();
         $this->copyPhpstan();
+        $this->copyGitHooks();
     }
 
     private function configureProject(): void
     {
         $this->composerHelper
             ->getManipulator()
-            ->addSubNode('extra', 'hooks.pre-commit', ['echo codestyle check']);
+            ->addSubNode('extra', 'hooks.pre-commit', ['./.git-pre-commit.sh']);
+        $this->composerHelper
+            ->getManipulator()
+            ->addSubNode('extra', 'config.stop-on-failure', ['pre-commit']);
 
         $composerJsonContent = JsonFile::parseJson($this->composerHelper->getComposerJsonContent());
         $postInstallCmd = $composerJsonContent['scripts'][Commands::POST_INSTALL_CMD_NAME] ?? [];
@@ -129,6 +134,18 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         if (!$this->filesystem->exists(realpath($newPhpstan))) {
             $this->io->write('[digital-sector/codestyle]: Copy phpstan.neon to project directory');
             $this->filesystem->copy($phpstan, $newPhpstan);
+        }
+    }
+
+    private function copyGitHooks(): void
+    {
+        $vendorPath = $this->composer->getConfig()->get('vendor-dir');
+        $preCommit = realpath($vendorPath . '/digital-sector/codestyle/.git-pre-commit.sh');
+        $newPreCommit = $vendorPath . '/../.git-pre-commit.sh';
+
+        if (!$this->filesystem->exists(realpath($newPreCommit))) {
+            $this->io->write('[digital-sector/codestyle]: Copy .git-pre-commit.sh to project directory');
+            $this->filesystem->copy($preCommit, $newPreCommit);
         }
     }
 }
