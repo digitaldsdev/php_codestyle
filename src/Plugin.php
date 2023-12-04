@@ -8,6 +8,7 @@ use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Factory;
 use Composer\IO\IOInterface;
+use Composer\Json\JsonFile;
 use Composer\Json\JsonManipulator;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\ScriptEvents;
@@ -79,14 +80,44 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $this->composerHelper
             ->getManipulator()
-            ->addSubNode('extra', 'hooks.config.pre-commit', ['echo codestyle check']);
+            ->addSubNode('extra', 'hooks.pre-commit', ['echo codestyle check']);
 
-        $this->composerHelper
-            ->getManipulator()
-            ->addSubNode('scripts', Commands::POST_INSTALL_CMD_NAME, Commands::POST_INSTALL_CMD);
-        $this->composerHelper
-            ->getManipulator()
-            ->addSubNode('scripts', Commands::POST_UPDATE_CMD_NAME, Commands::POST_UPDATE_CMD);
+        $composerJsonContent = JsonFile::parseJson($this->composerHelper->getComposerJsonContent());
+        $postInstallCmd = $composerJsonContent['scripts'][Commands::POST_INSTALL_CMD_NAME] ?? [];
+        $postUpdateCmd = $composerJsonContent['scripts'][Commands::POST_UPDATE_CMD_NAME] ?? [];
+
+        if (!empty($postInstallCmd)) {
+            $this->composerHelper
+                ->getManipulator()
+                ->addSubNode(
+                    'scripts',
+                    Commands::POST_INSTALL_CMD_NAME,
+                    array_merge($postInstallCmd, Commands::POST_INSTALL_CMD)
+                );
+        } else {
+            $this->composerHelper
+                ->getManipulator()
+                ->addSubNode(
+                    'scripts',
+                    Commands::POST_INSTALL_CMD_NAME,
+                    Commands::POST_INSTALL_CMD
+                );
+        }
+
+        if (!empty($postUpdateCmd)) {
+            $this->composerHelper
+                ->getManipulator()
+                ->addSubNode(
+                    'scripts',
+                    Commands::POST_UPDATE_CMD_NAME,
+                    array_merge($postUpdateCmd, Commands::POST_UPDATE_CMD)
+                );
+        } else {
+            $this->composerHelper
+                ->getManipulator()
+                ->addSubNode('scripts', Commands::POST_UPDATE_CMD_NAME, Commands::POST_UPDATE_CMD);
+        }
+
         $this->composerHelper
             ->getManipulator()
             ->addSubNode('scripts', Commands::CODE_STYLE_FIX_NAME, Commands::CODE_STYLE_FIX);

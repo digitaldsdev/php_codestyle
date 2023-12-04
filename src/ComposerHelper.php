@@ -47,7 +47,7 @@ class ComposerHelper
         $lockFile->write($lockData);
     }
 
-    private function getComposerJsonContent(): string
+    public function getComposerJsonContent(): string
     {
         return file_get_contents(Factory::getComposerFile());
     }
