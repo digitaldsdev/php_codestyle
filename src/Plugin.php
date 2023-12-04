@@ -12,7 +12,6 @@ use Composer\Json\JsonManipulator;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\ScriptEvents;
 use DigitalSector\CodeStyle\Enum\Commands;
-use DigitalSector\CodeStyle\Enum\ComposerTemplates;
 use Symfony\Component\Filesystem\Filesystem;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
@@ -78,21 +77,25 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     private function configureProject(): void
     {
-        $existsExtra = $this->composerHelper->getKey('extra');
-        $existsScripts = $this->composerHelper->getKey('scripts');
+        $this->composerHelper
+            ->getManipulator()
+            ->addSubNode('extra', 'hooks.config.pre-commit', ['echo codestyle check']);
 
         $this->composerHelper
             ->getManipulator()
-            ->addMainKey(
-                'extra',
-                array_merge_recursive($existsExtra, ComposerTemplates::EXTRA_MAIN)
-            );
+            ->addSubNode('scripts', Commands::POST_INSTALL_CMD_NAME, Commands::POST_INSTALL_CMD);
         $this->composerHelper
             ->getManipulator()
-            ->addMainKey(
-                'scripts',
-                array_merge_recursive($existsScripts, ComposerTemplates::SCRIPTS)
-            );
+            ->addSubNode('scripts', Commands::POST_UPDATE_CMD_NAME, Commands::POST_UPDATE_CMD);
+        $this->composerHelper
+            ->getManipulator()
+            ->addSubNode('scripts', Commands::CODE_STYLE_FIX_NAME, Commands::CODE_STYLE_FIX);
+        $this->composerHelper
+            ->getManipulator()
+            ->addSubNode('scripts', Commands::CODE_STYLE_CHECK_NAME, Commands::CODE_STYLE_CHECK);
+        $this->composerHelper
+            ->getManipulator()
+            ->addSubNode('scripts', Commands::CODE_STYLE_ANALYZE_NAME, Commands::CODE_STYLE_ANALYZE);
 
         $this->composerHelper->writeComposerJson();
 

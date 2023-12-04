@@ -10,7 +10,6 @@ use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Json\JsonManipulator;
 use Composer\Package\Locker;
-use Seld\JsonLint\ParsingException;
 
 class ComposerHelper
 {
@@ -30,20 +29,6 @@ class ComposerHelper
     public function getManipulator(): JsonManipulator
     {
         return $this->manipulator;
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     *
-     * @throws ParsingException
-     */
-    public function getKey(string $key)
-    {
-        $json = JsonFile::parseJson($this->getComposerJsonContent());
-
-        return $json[$key];
     }
 
     public function writeComposerJson(): void
