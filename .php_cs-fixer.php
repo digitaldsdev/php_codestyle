@@ -21,6 +21,13 @@ class CsFixerConfigurator
         'public',
         'swagger',
         'docker',
+        'bootstrap',
+        'cache',
+        'var',
+        'database',
+        'migrations',
+        'storage',
+        'resources',
     ];
 
     private const ANALYZE_PATH = './';
