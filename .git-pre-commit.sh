@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-echo -e "pre-commit action"
+echo -e "pre-commit actions"
 
-CHANGED_FILES=`git diff --name-only --diff-filter=ACM | grep "\.php"`
+CHANGED_FILES=`git status -s | cut -c4- | grep "\.php"`
 if [[ $CHANGED_FILES ]]; then
+    echo -e "find files: ${CHANGED_FILES}"
+
     set -e
 
     export DEFAULT_USER="1000";
