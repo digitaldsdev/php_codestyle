@@ -4,6 +4,13 @@ Codestyle package
 ## Установка
 `composer require --dev digital-sector/codestyle`
 
+## Работа с продовым окружением
+
+Если этот плагин добавлен в composer.json, то на продовых 
+и тестовых площадках рекомендуется устанавливать зависимости composer с флагом --no-dev или --no-plugins
+
+`composer install --no-dev --no-plugins`
+
 ## Команды
 1) PHP линтер для проверки синтаксических ошибок
 ```bash
