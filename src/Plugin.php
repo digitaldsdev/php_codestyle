@@ -86,40 +86,25 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $postInstallCmd = $composerJsonContent['scripts'][Commands::POST_INSTALL_CMD_NAME] ?? [];
         $postUpdateCmd = $composerJsonContent['scripts'][Commands::POST_UPDATE_CMD_NAME] ?? [];
 
-        if (!empty($postInstallCmd)) {
+        if (empty(array_intersect($postInstallCmd, Commands::POST_INSTALL_CMD))) {
+            $postInstallCmd = array_merge($postInstallCmd, Commands::POST_INSTALL_CMD);
+
             $this->composerHelper
                 ->getManipulator()
-                ->addSubNode(
-                    'scripts',
-                    Commands::POST_INSTALL_CMD_NAME,
-                    array_merge($postInstallCmd, Commands::POST_INSTALL_CMD),
-                    false
-                );
-        } else {
-            $this->composerHelper
-                ->getManipulator()
-                ->addSubNode(
-                    'scripts',
-                    Commands::POST_INSTALL_CMD_NAME,
-                    Commands::POST_INSTALL_CMD
-                );
+                ->addSubNode('scripts', Commands::POST_INSTALL_CMD_NAME, $postInstallCmd);
         }
 
-        if (!empty($postUpdateCmd)) {
+        if (empty(array_intersect($postUpdateCmd, Commands::POST_UPDATE_CMD))) {
+            $postUpdateCmd = array_merge($postUpdateCmd, Commands::POST_UPDATE_CMD);
+
             $this->composerHelper
                 ->getManipulator()
-                ->addSubNode(
-                    'scripts',
-                    Commands::POST_UPDATE_CMD_NAME,
-                    array_merge($postUpdateCmd, Commands::POST_UPDATE_CMD),
-                    false
-                );
-        } else {
-            $this->composerHelper
-                ->getManipulator()
-                ->addSubNode('scripts', Commands::POST_UPDATE_CMD_NAME, Commands::POST_UPDATE_CMD);
+                ->addSubNode('scripts', Commands::POST_UPDATE_CMD_NAME, $postUpdateCmd);
         }
 
+        $this->composerHelper
+            ->getManipulator()
+            ->addSubNode('scripts', Commands::CODE_STYLE_PHPLINT_NAME, Commands::CODE_STYLE_PHPLINT);
         $this->composerHelper
             ->getManipulator()
             ->addSubNode('scripts', Commands::CODE_STYLE_FIX_NAME, Commands::CODE_STYLE_FIX);
