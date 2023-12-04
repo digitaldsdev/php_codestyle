@@ -72,8 +72,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function postUpdateCmd(): void
     {
-        $this->configureProject();
-        $this->copyPhpstan();
+        //TODO: Add some actions here
     }
 
     private function configureProject(): void
