@@ -72,7 +72,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function postUpdateCmd(): void
     {
-        //TODO: Add some actions here
+        $this->configureProject();
+        $this->copyPhpstan();
     }
 
     private function configureProject(): void
@@ -91,7 +92,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
                 ->addSubNode(
                     'scripts',
                     Commands::POST_INSTALL_CMD_NAME,
-                    array_merge($postInstallCmd, Commands::POST_INSTALL_CMD)
+                    array_merge($postInstallCmd, Commands::POST_INSTALL_CMD),
+                    false
                 );
         } else {
             $this->composerHelper
@@ -109,7 +111,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
                 ->addSubNode(
                     'scripts',
                     Commands::POST_UPDATE_CMD_NAME,
-                    array_merge($postUpdateCmd, Commands::POST_UPDATE_CMD)
+                    array_merge($postUpdateCmd, Commands::POST_UPDATE_CMD),
+                    false
                 );
         } else {
             $this->composerHelper
