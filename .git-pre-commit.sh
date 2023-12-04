@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo -e "pre-commit action"
+echo -e "pre-commit actions"
 
 CHANGED_FILES=`git diff --name-only --diff-filter=ACM | grep "\.php"`
 if [[ $CHANGED_FILES ]]; then
