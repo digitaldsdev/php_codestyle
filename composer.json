@@ -6,11 +6,11 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "composer-plugin-api": "*",
-        "brainmaestro/composer-git-hooks": "^2.8",
+        "brainmaestro/composer-git-hooks": "^2.8 || dev-master",
         "phpstan/phpstan": "^1.10",
         "friendsofphp/php-cs-fixer": "^3.40",
-        "symfony/filesystem": "^5.4 || ^6.0 || ^7.0",
-        "symfony/console": "^5.4 || ^6.0 || ^7.0"
+        "symfony/filesystem": "^5.4 || ^6.0",
+        "symfony/console": "^5.4 || ^6.0"
     },
     "require-dev": {
         "composer/composer": "^2.6"
