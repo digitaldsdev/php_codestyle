@@ -47,7 +47,7 @@ class GitHooksHelper
             $hookVendorPath = realpath($vendorDir . Plugin::PLUGIN_VENDOR_PATH . $hook);
             $newHookPath = $vendorDir . '/../' . $hook;
 
-            if (!$this->filesystem->exists($newHookPath)) {
+            if (!$this->filesystem->exists(realpath($newHookPath))) {
                 $this->io->write('[digitaldsdev/codestyle]: Copy ' . $hook . ' to project directory');
                 $this->filesystem->copy($hookVendorPath, $newHookPath);
             }

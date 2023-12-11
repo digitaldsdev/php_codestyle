@@ -17,7 +17,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
-    public const PLUGIN_VENDOR_PATH = 'digitaldsdev/codestyle';
+    public const PLUGIN_VENDOR_PATH = '/digitaldsdev/codestyle/';
 
     private Composer $composer;
 
