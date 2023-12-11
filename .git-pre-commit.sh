@@ -23,9 +23,10 @@ if [[ $CHANGED_FILES ]]; then
             for FILE in $CHANGED_FILES; do composer code-style:phplint $FILE || exit $?; done &&
         echo -e "\033[1;33mrun code style fixer\033[0m" &&
             composer code-style:fix $CHANGED_FILES &&
-            git add $CHANGED_FILES &&
         echo -e "\033[1;33mrun code analyzer\033[0m" &&
             composer code-style:analyze $CHANGED_FILES || exit $?';
 
     docker-compose -p ${PROJECT_PREFIX} -f docker/docker-compose.yml run --entrypoint="" php bash -c "$CMD"
+
+    git add ${CHANGED_FILES}
 fi
