@@ -2,6 +2,9 @@
 
 echo -e "pre-commit actions"
 
+LOCAL_BRANCH=`git branch | grep \* | cut -d ' ' -f2`
+echo -e "committing \033[0;32m$LOCAL_BRANCH\033[0m"
+
 CHANGED_FILES=`git status -s | cut -c4- | grep "\.php"`
 if [[ $CHANGED_FILES ]]; then
     echo -e "find files: ${CHANGED_FILES}"
