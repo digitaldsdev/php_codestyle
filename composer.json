@@ -1,5 +1,5 @@
 {
-    "name": "digital-sector/codestyle",
+    "name": "digitaldsdev/codestyle",
     "description": "Codestyle for projects",
     "license": ["proprietary"],
     "type": "composer-plugin",

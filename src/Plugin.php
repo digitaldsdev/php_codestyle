@@ -128,11 +128,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     private function copyPhpstan(): void
     {
         $vendorPath = $this->composer->getConfig()->get('vendor-dir');
-        $phpstan = realpath($vendorPath . '/digital-sector/codestyle/phpstan.neon');
+        $phpstan = realpath($vendorPath . '/digitaldsdev/codestyle/phpstan.neon');
         $newPhpstan = $vendorPath . '/../phpstan.neon';
 
         if (!$this->filesystem->exists(realpath($newPhpstan))) {
-            $this->io->write('[digital-sector/codestyle]: Copy phpstan.neon to project directory');
+            $this->io->write('[digitaldsdev/codestyle]: Copy phpstan.neon to project directory');
             $this->filesystem->copy($phpstan, $newPhpstan);
         }
     }
@@ -140,11 +140,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     private function copyGitHooks(): void
     {
         $vendorPath = $this->composer->getConfig()->get('vendor-dir');
-        $preCommit = realpath($vendorPath . '/digital-sector/codestyle/.git-pre-commit.sh');
+        $preCommit = realpath($vendorPath . '/digitaldsdev/codestyle/.git-pre-commit.sh');
         $newPreCommit = $vendorPath . '/../.git-pre-commit.sh';
 
         if (!$this->filesystem->exists(realpath($newPreCommit))) {
-            $this->io->write('[digital-sector/codestyle]: Copy .git-pre-commit.sh to project directory');
+            $this->io->write('[digitaldsdev/codestyle]: Copy .git-pre-commit.sh to project directory');
             $this->filesystem->copy($preCommit, $newPreCommit);
         }
     }

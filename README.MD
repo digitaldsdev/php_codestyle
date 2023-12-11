@@ -2,7 +2,7 @@
 
 Codestyle package
 ## Установка
-`composer require --dev digital-sector/codestyle`
+`composer require --dev digitaldsdev/codestyle`
 
 ## Работа с продовым окружением
 
