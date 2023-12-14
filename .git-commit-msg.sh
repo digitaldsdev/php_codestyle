@@ -6,7 +6,7 @@ fi
 
 LOCAL_BRANCH=`git branch | grep \* | cut -d ' ' -f2`
 
-if [[ $LOCAL_BRANCH =~ "release" ]]; then
+if [[ ($LOCAL_BRANCH =~ "release") || ($LOCAL_BRANCH == "master") || ($LOCAL_BRANCH == "main") ]]; then
     exit 0
 fi
 
